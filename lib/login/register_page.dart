@@ -18,6 +18,7 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   late String email;
   late String password;
+  late String name;
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +49,20 @@ class _RegisterPageState extends State<RegisterPage> {
                     padding: const EdgeInsets.fromLTRB(20, 20, 20, 70),
                     child: FlutterLogo(
                       size: 40,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                    child: TextField(
+                      onChanged: (value) {
+                        name = value;
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(90.0),
+                        ),
+                        labelText: 'Name',
+                      ),
                     ),
                   ),
                   Container(
@@ -109,13 +124,12 @@ class _RegisterPageState extends State<RegisterPage> {
 
   _register() async{
     try {
-      log('register');
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      log('register');
+      await FirebaseAuth.instance.currentUser!.updateDisplayName(name);
       Navigator.pushNamed(context, LoginPage.id);
 
 

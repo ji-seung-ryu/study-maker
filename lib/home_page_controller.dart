@@ -1,17 +1,32 @@
+import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:study_maker/home_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'chat_page.dart';
+import 'model/chat_model.dart';
 
 class HomePageController extends StatefulWidget {
   static String id = '/HomePageController';
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<HomePageController> {
   int _selectedIndex = 0;
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  late final User user;
+
+
+  @override
+  void initState() {
+    inputData();
+    _widgetOptions[1] = retChatpage();
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,16 +115,75 @@ class _MyHomePageState extends State<HomePageController> {
       */
 
       body: _widgetOptions[_selectedIndex],
-
       bottomNavigationBar: bottomNavigationBar(),
     );
   }
+  List<ChatModel> chatmodels = [
+   /* ChatModel(
+      name: "Dev Stack",
+      isGroup: false,
+      currentMessage: "Hi Everyone",
+      time: "4:00",
+      icon: "person.svg",
+      id: 1,
+    ),*/
+    ChatModel(
+      name: "Kishor",
+      isGroup: false,
+      currentMessage: "Hi Kishor",
+      time: "13:00",
+      icon: "person.svg",
+      id: 2,
+    ),
+
+    ChatModel(
+      name: "Collins",
+      isGroup: false,
+      currentMessage: "Hi Dev Stack",
+      time: "8:00",
+      icon: "person.svg",
+      id: 3,
+    ),
+
+    ChatModel(
+      name: "Balram Rathore",
+      isGroup: false,
+      currentMessage: "Hi Dev Stack",
+      time: "2:00",
+      icon: "person.svg",
+      id: 4,
+    ),
+
+    // ChatModel(
+    //   name: "NodeJs Group",
+    //   isGroup: true,
+    //   currentMessage: "New NodejS Post",
+    //   time: "2:00",
+    //   icon: "group.svg",
+    // ),
+  ];
+
+  ChatModel sourceChat = ChatModel(
+    name: "Dev Stack",
+    isGroup: false,
+    currentMessage: "Hi Everyone",
+    time: "4:00",
+    icon: "person.svg",
+    id: 1,
+  );
+
+  ChatPage retChatpage(){
+    return ChatPage(chatmodels:  chatmodels,
+        sourchat: sourceChat);
+  }
+
+
 
   List<Widget> _widgetOptions = [
     HomePage(),
-    ChatPage(),
+    Text('a'),
     Text(
-      'Places',
+      'aa',
       style: TextStyle(fontSize: 30, fontFamily: 'DoHyeonRegular'),
     ),
     Text(
@@ -120,7 +194,6 @@ class _MyHomePageState extends State<HomePageController> {
 
   BottomNavigationBar bottomNavigationBar() {
     return BottomNavigationBar(
-
       type: BottomNavigationBarType.fixed,
       backgroundColor: Colors.grey,
       selectedItemColor: Colors.white,
@@ -151,5 +224,13 @@ class _MyHomePageState extends State<HomePageController> {
     );
   }
 
+  void inputData() async {
+    user = auth.currentUser!;
+    final uid = user.uid;
+    // here you write the codes to input the data into firestore
+    _widgetOptions[2] = Text(
+      user.displayName!,
+      style: TextStyle(fontSize: 30, fontFamily: 'DoHyeonRegular'),
+    );
+  }
 }
-

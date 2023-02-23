@@ -1,11 +1,13 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:study_maker/study.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'add.dart';
 import 'category.dart';
+import 'login/login_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -19,9 +21,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late TextEditingController controller;
   String address = '은평구';
   int CategoryIdx = 0;
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
 
   @override
   void initState() {
+
     animationController = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
     controller = TextEditingController();
@@ -139,7 +144,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             width: 60,
             height: 60,
             child: const Icon(Icons.add_alert_rounded),
-          )
+          ),
+          IconButton(onPressed:(){ logOut();}, icon: Icon(Icons.logout))
+
+
+
+
         ],
       ),
     );
@@ -293,6 +303,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     setState(() {
       Study.studyList.add(s);
     });
+  }
+
+  logOut() async {
+    await auth.signOut();
+    Navigator.pushNamed(context, LoginPage.id);
   }
 }
 
